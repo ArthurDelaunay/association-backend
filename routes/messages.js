@@ -10,7 +10,7 @@ const messages = []
 app.post("/", verifyAssociationExist, (req, res) => {
   const newMessage = {
     name: req.body.name,
-    message: req.body.message,
+    body: req.body.message,
     date: moment().format(),
     slug: req.body.slug,
   }
@@ -25,6 +25,18 @@ app.get("/", (req, res) => {
     return moment(b.date).format("x") - moment(a.date).format("x")
   })
   res.json(sortedMessages)
+})
+
+// request to get filtered messages by slug
+
+app.get("/:slug", (req, res) => {
+  const sortedMessages = messages.sort((a, b) => {
+    return moment(b.date).format("x") - moment(a.date).format("x")
+  })
+  const filteredMessages = sortedMessages.filter((message) => {
+    return message.slug === req.params.slug
+  })
+  res.json(filteredMessages)
 })
 
 module.exports = app
